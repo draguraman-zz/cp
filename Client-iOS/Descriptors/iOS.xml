@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<application xmlns="http://ns.adobe.com/air/application/3.1">
+	<id>com.zynga.clickwithfriends.ent</id>
+	<versionNumber>1.0</versionNumber>
+	<filename>Crazy Pool</filename>
+	<description></description>
+	<copyright></copyright>
+	<initialWindow>
+		<content>Billiards.swf</content>
+		<systemChrome>none</systemChrome>
+		<transparent>true</transparent>
+		<visible>true</visible>
+		<fullScreen>true</fullScreen>
+		<autoOrients>false</autoOrients>
+		<aspectRatio>landscape</aspectRatio>
+		<renderMode>gpu</renderMode>
+	</initialWindow>
+	<customUpdateUI>false</customUpdateUI>
+	<allowBrowserInvocation>false</allowBrowserInvocation>
+	<icon>
+		<image29x29>Icons/29x29.png</image29x29>
+		<image57x57>Icons/57x57.png</image57x57>
+		<image114x114>Icons/114x114.png</image114x114>
+		<image48x48>Icons/48x48.png</image48x48>
+		<image72x72>Icons/72x72.png</image72x72>
+	</icon>
+	<iPhone>
+		<!-- A list of plist key/value pairs to be added to the application Info.plist -->
+		<InfoAdditions>
+            <![CDATA[
+                <key>UIDeviceFamily</key>
+                <array>
+                    <string>1</string>
+                    <string>2</string>
+                </array>
+                <key>UIStatusBarStyle</key>
+                <string>UIStatusBarStyleBlackOpaque</string>
+                <key>UIRequiresPersistentWiFi</key>
+                <string>YES</string>
+                <key>CFBundleURLTypes</key>
+				<array>
+					<dict>
+						<key>CFBundleURLSchemes</key>
+						<array>
+							<string>fb183648045089636</string>
+						</array>
+					</dict>
+				</array>
+            ]]>
+		</InfoAdditions>
+		<requestedDisplayResolution>high</requestedDisplayResolution>
+	</iPhone>
+</application>

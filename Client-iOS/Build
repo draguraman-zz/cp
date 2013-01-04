@@ -1,0 +1,145 @@
+#!/bin/sh
+
+[ -z $DEBUG ] || set -x
+
+PATH=$PATH:
+
+[ ! -z "$JAVA32_HOME" ] || JAVA32_HOME=`pwd`/Deps/Java32/jre/
+[ -d "$JAVA32_HOME" ] || { echo "Unable to Find Java. Set JAVA32_HOME Correctly." ; exit -1 ; }
+
+[ ! -z "$ADT_HOME" ] || ADT_HOME='/opt/air'
+[   -d "$ADT_HOME" ] || ADT_HOME=`pwd`'/Deps/AIR3.4'
+[   -d "$ADT_HOME" ] || ADT_HOME='/Applications/Adobe Flash CS5.5/AIR2.6'
+[   -d "$ADT_HOME" ] || { echo "Unable to Find AIR Directory. Set ADT_HOME Correctly." ; exit -1 ; }
+
+[ ! -z "$FLEX_HOME" ] || FLEX_HOME='/opt/flex'
+[   -d "$FLEX_HOME" ] || FLEX_HOME=`pwd`'/Deps/Flex4.6'
+[   -d "$FLEX_HOME" ] || FLEX_HOME='/Applications/Adobe\ Flash\ Builder\ 4.6/sdks/4.6.0/'
+[   -d "$FLEX_HOME" ] || { echo "Unable to Find Flex Directory. Set FLEX_HOME Correctly." ; exit -1 ; }
+
+ADT=$ADT_HOME/bin/adt
+FC=$FLEX_HOME/bin/amxmlc
+
+SWC_FILES=`ls Lib/*.swc 2>/dev/null`
+CLASS_FILE=Billiards
+SRC=Src
+
+if [ ! -z "$SWC_FILES" ] ; then
+	SWC_ARGS=
+	for swc in $SWC_FILES ; do
+		SWC_ARGS=" $SWC_ARGS -library-path+=$swc"
+	done
+	SWC_FILES="$SWC_ARGS"
+fi
+
+cd `dirname $0`
+
+function setup() {
+	echo "Setting up \c"
+	mkdir -p Bin
+	echo " ... Done"
+	return 0;
+}
+
+function build_web() {
+	PLAT=Web
+	OUTPUT=Bin/client.swf
+
+	C_SWF_FILE=Bin/$CLASS_FILE-$PLAT.swf
+	TARGET_SRC=.Src-$PLAT
+	echo "Compiling $PLAT \c"
+	if [ ! -f $C_SWF_FILE ] ; then
+		mkdir -p $TARGET_SRC
+		cp -r $SRC/* $TARGET_SRC/
+	PATH=$JAVA32_HOME/bin:$PATH: DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH:$JAVA32_HOME/lib/$JAVA_ARCH LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$JAVA32_HOME/lib/$JAVA_ARCH "$FC" $TARGET_SRC/$CLASS_FILE.as $SWC_FILES -o $C_SWF_FILE || { echo "Failed!"; return -1; }
+		rm -r $TARGET_SRC
+		rm -f $OUTPUT
+	fi
+	echo " ... Done"
+
+	echo "Building $PLAT \c"
+	if [ ! -f "$OUTPUT" ] ; then
+		cat $C_SWF_FILE >$OUTPUT  || { echo "Failed!"; return -1; }
+	fi
+	echo " ... Done"
+
+	return 0;
+}
+
+function build_ios() {
+	PLAT=iOS
+	OUTPUT=Bin/AIR.ipa
+
+	C_SWF_FILE=Bin/$CLASS_FILE-$PLAT.swf
+	TARGET_SRC=.Src-$PLAT
+	echo "Compiling $PLAT \c"
+	if [ ! -f $C_SWF_FILE ] ; then
+		mkdir -p $TARGET_SRC
+		cp -r $SRC/* $TARGET_SRC/
+	PATH=$JAVA32_HOME/bin:$PATH: DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH:$JAVA32_HOME/lib/$JAVA_ARCH LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$JAVA32_HOME/lib/$JAVA_ARCH "$FC" $TARGET_SRC/$CLASS_FILE.as $SWC_FILES -o $C_SWF_FILE || { echo "Failed!"; return -1; }
+		rm -r $TARGET_SRC
+		rm -f $OUTPUT
+	fi
+	echo " ... Done"
+
+	TARGET=ipa-app-store
+	SIGNING_OPTIONS="-storetype pkcs12 -keystore "`ls Certificates/$PLAT-Cert.p12`" -storepass "`cat Certificates/Cert-Password.txt`" -keypass "`cat Certificates/Cert-Password.txt`
+	PLAT_SIGNING_OPTIONS="-provisioning-profile "`ls Certificates/$PLAT-Provision.mobileprovision`
+	#PREF_SDK=/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS5.1.sdk/
+	PLAT_OPTIONS=
+	[ -d "$PREF_SDK" ] && PLAT_OPTIONS="-platformsdk $PREF_SDK"
+	SWF_FILE=$CLASS_FILE.swf
+	FILES="$SWF_FILE Icons/"
+	echo "Building $PLAT \c"
+	if [ ! -f "$OUTPUT" ] ; then
+		cp $C_SWF_FILE $SWF_FILE || { echo "Failed!"; return -1; }
+		"$ADT" -package -target $TARGET $SIGNING_OPTIONS $PLAT_SIGNING_OPTIONS $OUTPUT Descriptors/$PLAT.xml $FILES $PLAT_OPTIONS || { echo "Failed!"; return -1; }
+	fi
+	echo " ... Done"
+	return 0;
+}
+
+function build_andr() {
+	PLAT=Android
+	OUTPUT=Bin/AIR.apk
+
+	C_SWF_FILE=Bin/$CLASS_FILE-$PLAT.swf
+	TARGET_SRC=.Src-$PLAT
+	echo "Compiling $PLAT \c"
+	if [ ! -f $C_SWF_FILE ] ; then
+		mkdir -p $TARGET_SRC
+		cp -r $SRC/* $TARGET_SRC/
+	PATH=$JAVA32_HOME/bin:$PATH: DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH:$JAVA32_HOME/lib/$JAVA_ARCH LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$JAVA32_HOME/lib/$JAVA_ARCH "$FC" $TARGET_SRC/$CLASS_FILE.as $SWC_FILES -o $C_SWF_FILE || { echo "Failed!"; return -1; }
+		rm -r $TARGET_SRC
+		rm -f $OUTPUT
+	fi
+	echo " ... Done"
+
+	TARGET=apk-captive-runtime 
+	SDK=Deps/Android-SDK
+	SIGNING_OPTIONS="-storetype pkcs12 -keystore "`ls Certificates/$PLAT-Cert.p12`" -storepass "`cat Certificates/Cert-Password.txt`" -keypass "`cat Certificates/Cert-Password.txt`
+	PLAT_SIGNING_OPTIONS=
+	PLAT_OPTIONS="-platformsdk $SDK"
+	SWF_FILE=$CLASS_FILE.swf
+	FILES="$SWF_FILE Icons/"
+	echo "Building $PLAT \c"
+	if [ ! -f "$OUTPUT" ] ; then
+		cp $C_SWF_FILE $SWF_FILE || { echo "Failed!"; return -1; }
+		"$ADT" -package -target $TARGET $SIGNING_OPTIONS $PLAT_SIGNING_OPTIONS $OUTPUT Descriptors/$PLAT.xml $FILES $PLAT_OPTIONS || { echo "Failed!"; return -1; }
+	fi
+	echo " ... Done"
+
+	return 0;
+}
+
+function teardown() {
+	rm -f $SWF_FILE
+}
+
+setup &&
+{
+build_web
+build_ios 
+build_andr
+}
+teardown

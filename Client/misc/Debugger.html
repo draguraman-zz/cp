@@ -1,0 +1,70 @@
+<html lang="en">
+  <head>
+  <title>Debug</title>
+  </head>
+   <script type="text/javascript" src="../../Content/scripts/swfobject.js"></script>
+   <script type="text/javascript" src="../../Content/scripts/flashvars_js.js"></script>
+   <script type="text/javascript" src="../../Content/scripts/WebSocketClient.js"></script>
+   <script type="text/javascript" src="../../Content/scripts/FlashWebSocketClient.js"></script>
+    <script>
+      function popup(pageURL, title,w,h) {
+        var left = (screen.width/2)-(w/2);
+        var top = (screen.height/2)-(h/2);
+        var targetWin = window.open(
+          pageURL,
+          title,
+          'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width='+w+', height='+h+', top='+top+', left='+left
+          );
+      }
+
+	//Now and then get user_token from it: https://developers.facebook.com/tools/access_token/
+	var flashvars = {};
+	flashvars.gateway = "https://crazypool1.herokuapp.com/Gateway/";
+	flashvars.picproxy = "https://crazypool1.herokuapp.com/picture.php";
+	
+	/* Sonali Bhadra */
+	/*
+	flashvars.usertoken = "AAAEJ3FPXdgYBAJ8MdF3bjFElcFUrohR77EBIBdeifIPgkB9q6lqYfQY8ZAexHnjeS2UMLUOmPZBv7cs5oy0k7RN668MGrAzPfk7Px9GAZDZD";
+	flashvars.user = "1:100001155508359";
+	flashvars.username = "Sonali Bhadra";
+    */
+    /* Karthik Kumar Viswanathan */
+	flashvars.usertoken = "AAAEJ3FPXdgYBAIUscbRPmzA3WJZAfmy77iqJpcAUvOAZCZB8KAzFwE2dJLI7cFdZAAgGbZCWa6qhdVxa9zTpqCUf07rmQV2pPyl7u6NBwKwZDZD";
+	flashvars.user = "1:644850560";
+	flashvars.username = "Karthik Kumar Viswanathan";
+		
+	flashvars.usenativesocket = true;
+		
+	var params = {};
+        params.menu = "false";
+        params.scale = "noscale";
+        params.allowFullScreen = "true",
+        params.allowScriptAccess = "always",
+        params.wmode = "transparent";
+        params.bgcolor = "#ffffff";
+		
+	var attributes = {};
+	attributes.id = "flashcontent";
+	attributes.name = "flashcontent";
+		
+    swfobject.embedSWF("../bin-debug/Billiards.swf", "content", "100%", "100%", "10.0.0","expressInstall.swf", flashvars, params, attributes);  
+    </script>
+    <!--[if IE]>
+      <script>
+        var tags = ['header', 'section'];
+        while(tags.length)
+          document.createElement(tags.pop());
+      </script>
+    <![endif]-->
+  </head>
+<body style="width:100%; height:100%; margin:0px; padding:0px; background-color:#ffffff; text-align:center; color: #000000; font-family:sans-serif; overflow:hidden; vertical-align:middle">
+	<div id="fb-root"></div>
+	<!-- <section id="game" class="clearfix"> -->
+	<div id="content">
+			<span class="loadingGame">Loading Game...</span>
+			<br/>
+			<span class="upgradeFlash">You may need to install or upgrade <b>Flash</b>. &nbsp;&nbsp;&nbsp;&nbsp; <a target="_new" href="http://www.adobe.com/support/flashplayer/downloads.html"><img src="http://www.adobe.com/images/shared/download_buttons/get_flash_player.gif" alt="Install Adobe Flash Player!"><br/></span>
+	</div>
+	<!-- </section> -->
+  </body>
+</html>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<application xmlns="http://ns.adobe.com/air/application/3.1">
+    <id>com.zynga.clickwithfriends.ent</id>
+    <versionNumber>1.0</versionNumber>
+    <filename>Crazy Pool</filename>
+    <description></description>
+    <copyright></copyright>
+    <initialWindow>
+        <content>Billiards.swf</content>
+        <systemChrome>standard</systemChrome>
+        <transparent>false</transparent>
+        <visible>true</visible>
+        <fullScreen>true</fullScreen>
+        <autoOrients>false</autoOrients>
+        <aspectRatio>landscape</aspectRatio>
+        <renderMode>direct</renderMode>
+    </initialWindow>
+    <customUpdateUI>false</customUpdateUI>
+    <allowBrowserInvocation>false</allowBrowserInvocation>
+    <icon>
+        <image36x36>Icons/36x36.png</image36x36>
+        <image72x72>Icons/72x72.png</image72x72>
+        <image48x48>Icons/48x48.png</image48x48>
+    </icon>
+    <android>
+        <manifestAdditions><![CDATA[<manifest><uses-permission android:name="android.permission.CAMERA"/><uses-permission android:name="android.permission.INTERNET"/><uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/><uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/></manifest>]]></manifestAdditions>
+    </android>
+    <versionLabel></versionLabel>
+</application>
